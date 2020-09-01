@@ -100,6 +100,10 @@ def parse_data(mongo_configs: dict, mongo_ids_url: list):
                 add_product_id(mongo_doc, db[mongo_configs["collection_product_id"]])
                 mongo_request.append(mongo_doc)
 
+            except Exception as ex:
+                logging.error(ex)
+                continue
+
             try:
                 if len(mongo_request) >= 20:
                     collection_recipes.insert_many(mongo_request)
@@ -110,10 +114,6 @@ def parse_data(mongo_configs: dict, mongo_ids_url: list):
                 mongo_request = []
                 continue
 
-        except Exception as ex:
-            logging.error(ex)
-            continue
-        
     if len(mongo_request) != 0:
         collection_recipes.insert_many(mongo_request)
 
