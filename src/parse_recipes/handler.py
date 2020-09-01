@@ -14,7 +14,7 @@ def handler(configs: dict):
 
     data = parse_urls(configs, start_url)
 
-    batches = divide_to_batches(data, 100)
+    batches = divide_to_batches(data, 10)
     for batch in batches:
-        proc = Process(target=parse_data, args=(configs, mongo_ids_url))
-
+        proc = Process(target=parse_data, args=(configs, batches,))
+        proc.start()

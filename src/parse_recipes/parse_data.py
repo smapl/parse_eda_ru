@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 
+
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
@@ -12,19 +13,22 @@ from .utils import norm_text, add_product_id
 
 
 def parse_data(mongo_configs: dict, mongo_ids_url: list):
+
     client = MongoClient(mongo_configs["mongo_url"])
     db = client[mongo_configs["db"]]
     collection_urls = db[mongo_configs["collection_urls"]]
     collection_recipes = db[mongo_configs["collection_recipes"]]
+
     proc = os.getpid()
+    print(f"\n--start main data parse--{proc}--\n")
 
     for url_id in mongo_ids_url:
 
         base_site_url = None
         mongo_request = []
         count_data_parse = 0
-        print(f"\n--start main data parse--{proc}--\n")
-        for url in collection_urls.find({"_id": url_id}):
+
+        for url in collection_urls.find({"_id": url_id[0]}):
 
             count_data_parse += 1
             print(f"{count_data_parse} - {url['url']} - {proc}")
@@ -109,7 +113,7 @@ def parse_data(mongo_configs: dict, mongo_ids_url: list):
     if len(mongo_request) != 0:
         collection_recipes.insert_many(mongo_request)
 
-    db.drop_collection(mongo_configs["collection_urls"])
+    # db.drop_collection(mongo_configs["collection_urls"])
     client.close()
 
     return
