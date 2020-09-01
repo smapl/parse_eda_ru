@@ -1,0 +1,13 @@
+__pycache__
+build
+dist
+app.spec
+.mypy_cache
+*.egg-info
+*.log
+*.cache
+*.pyc
+.python-version
+.vscode
+test.py
+.venv
